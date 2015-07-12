@@ -12,4 +12,3 @@ Integrantes:
 
   Vanessa Revelo
 
-  Cesar San Lucas
