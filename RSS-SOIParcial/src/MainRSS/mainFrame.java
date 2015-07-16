@@ -78,6 +78,7 @@ public class mainFrame  extends JFrame{
         this.configTimeP=4;
         this.configTimeC=4;
         setTitle("RSS READER");
+        //this.setIconImage(new ImageIcon(getClass().getResource("/Imagenes/loguito.png")).getImage());
         JLabel lb = new JLabel(new ImageIcon(getClass().getResource("/Imagenes/rssfeedPart1.png")));
        
         JPanel p1 = new JPanel(new GridLayout(1,2));
@@ -168,6 +169,10 @@ public class mainFrame  extends JFrame{
         panelFeeds =new JPanel(new GridLayout(9,2));
         panelRSS.setBorder(BorderFactory.createTitledBorder(
         BorderFactory.createEtchedBorder(), "--Rss--"));
+        JScrollPane scrollPane = new JScrollPane(panelRSS);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        //scrollPane.setBounds(50, 30, 300, 50);
+         panelPrincipal.add(scrollPane);
         panelconfiguracion.setLayout(new FlowLayout());
         panelconfiguracion.setSize(200, 200);
         prod = new JLabel("Productor :");
@@ -193,8 +198,6 @@ public class mainFrame  extends JFrame{
         panelconfiguracion.add(consulb);
         panelconfiguracion.add(close);
         
-
-        panelPrincipal.add(panelRSS);
         p1.add(lb1);
         p1.add(btn1);
         p2.add(lb2);
