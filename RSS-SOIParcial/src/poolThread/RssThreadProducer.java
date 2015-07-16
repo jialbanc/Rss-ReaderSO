@@ -5,8 +5,8 @@
  */
 package poolThread;
 
-import java.util.EmptyStackException;
-import java.util.Stack;
+import MainRSS.BufferRss;
+import static java.lang.Thread.sleep;
 import rss.Feed;
 import rss.FeedMessage;
 import rss.RSSFeedParser;
@@ -16,54 +16,48 @@ import rss.RSSFeedParser;
  * @author Jimmy
  */
 public class RssThreadProducer implements Runnable{
-
+    
+    private BufferRss bufferP;
+    
     private String link;
     private RSSFeedParser parser;
     private Feed feed;
-    private Boolean firstRun;
+    //private Boolean firstRun;
     private FeedMessage currentFeed;
-    private Stack stackP;
+    private int timeBF;
     
-    public RssThreadProducer(String s, Stack stack){
+    public RssThreadProducer(BufferRss buffer,String s,int time){
+        this.bufferP = buffer;
         this.link=s;
-        this.firstRun=false;
-        this.stackP=stack;
+        this.currentFeed= new FeedMessage();
+        this.currentFeed.setTitle("");
+        this.timeBF=time*1000;
+        System.out.println("Comienza prod");
+        //this.firstRun=false;
     }
  
     @Override
     public void run() {
-        refresh();
-        if(firstRun){
-            for ( FeedMessage f : feed.getEntries()){
-                System.out.println(f.getTitle()+"\n");
-                System.out.println(f.getDescription()+"\n");
+        while(true){
+            parser = new RSSFeedParser(link);
+            feed = parser.readFeed();
+            if((currentFeed.getTitle()).compareTo(feed.getEntries().get(0).getTitle())!=0){
+                currentFeed = feed.getEntries().get(0);
+                bufferP.putDown(currentFeed);
             }
-            firstRun=false;
-        }
-        else{
-            currentFeed = feed.getEntries().get(0);
+            System.out.println("Producer");
             try{
-                stackP.push(currentFeed);
-            } catch (EmptyStackException e){
-                e.printStackTrace();
+                sleep(timeBF);
             }
-                
+            catch(InterruptedException e){}
+//        if(firstRun){
+//            for ( FeedMessage f : feed.getEntries()){
+//                System.out.println(f.getTitle()+"\n");
+//                System.out.println(f.getDescription()+"\n");
+//            }
+//            firstRun=false;
+//        }
+//        else{
         }
     }
-    
-    private void refresh() {
-        parser = new RSSFeedParser(link);
-        feed = parser.readFeed();
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
- 
-    @Override
-    public String toString(){
-        return this.link;
-    }
-    
 }
